@@ -1,0 +1,47 @@
+{
+  "name": "cyberwork",
+  "displayName": "cyberwork",
+  "expo": {
+    "name": "cyberwork",
+    "description": "HealthChess cyberwork",
+    "owner": "healthchess",
+    "slug": "cyberwork",
+    "version": "1.0.0",
+    "privacy": "public",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2666DE"
+    },
+    "ios": {
+      "bundleIdentifier": "com.healthchess.cyberwork",
+      "buildNumber": "1.0.1",
+      "config": {}
+    },
+    "android": {
+      "package": "com.healthchess.cyberwork",
+      "versionCode": 2,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/foreground.png",
+        "backgroundColor": "#2666DE"
+      },
+      "config": {}
+    },
+    "androidNavigationBar": {
+      "barStyle": "dark-content",
+      "backgroundColor": "#ffffff"
+    },
+    "androidStatusBar": {
+      "translucent": true
+    }
+  }
+}

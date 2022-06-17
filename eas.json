@@ -1,0 +1,28 @@
+{
+  "cli": {
+    "version": ">= 0.52.0"
+  },
+  "build": {
+    "base": {
+      "distribution": "internal"
+    },
+    "development": {
+      "extends": "base",
+      "developmentClient": true
+    },
+    "preview": {
+      "extends": "base"
+    },
+    "production": {
+      "extends": "base",
+      "distribution": "store",
+      "android": {
+        "autoIncrement": "versionCode"
+      },
+      "ios": {
+        "buildConfiguration": "Release",
+        "autoIncrement": "buildNumber"
+      }
+    }
+  }
+}
