@@ -7,70 +7,84 @@ import Tabs from '@components/tabs'
 import CardAgenda from './card'
 import { supabase } from '@services/supabase'
 import { Ordens } from '@services/types'
-import { useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import 'react-native-url-polyfill/auto';
 import Fab from '@components/fab'
 
 const index = () => {
+  const navigation = useNavigation();
+  const [data, setData] = useState([]);
+  
+  const [ activeTab, setActiveTab ] = useState('aberta');
 
-  const tabs = [
+  const [tabs, setTabs] = useState([
     { label: 'Em andamento', value: 'aberta'},
     { label: 'Finalizadas', value: 'fechada'},
-  ]
-  
-  const [ activeTab, setActiveTab ] = useState(tabs[0].value);
-  const [data, setData] = useState([]);
+  ]);
+
+  const activeTabChange = useCallback((value) => {
+    setActiveTab(value);
+  }, []);
+
+  const deleteOrder = async (id: string) => {
+    const { data, error } = await supabase
+    .from<Ordens>('ordens')
+    .delete()
+    .eq('id', id)
+  }
 
   const getOrdens = async () => {
     const { data: ordens, error } = await supabase
     .from<Ordens>('ordens')
     .select('*')
-    // .eq('aberta', 'true')
+    .eq('aberta', activeTab === tabs[0].value)
     //@ts-ignore
     setData(ordens)
   }
 
-  const ord = async () => {
-    const sub = await supabase
+  const realtimeOrders = () => {
+    const Orders = supabase
     .from<Ordens>('ordens')
-    .on("*", async (payload) => {
-      await getOrdens();
+    .on("*", payload => {
+      getOrdens();
     })
-    return sub;
+    return Orders;
   }
-
-  // useEffect(() => {
-  //   const unSub = getOrdens().then(() => {
-  //     return ord();
-  //   })
-  //   return async () => await unSub;
-  // }, [])
 
   useFocusEffect(
     useCallback(() => {
-      const unSub = getOrdens().then(() => {
-        return ord();
+      const Orders = getOrdens().then(() => {
+        return realtimeOrders();
       })
-      return async () => await unSub;
-    }, [])
+      return async () => await Orders;
+    }, [ getOrdens, realtimeOrders ])
   )
+
+  const novaOrdem = () => {
+    navigation.navigate('novaOrdemServico');
+  }
 
   return (
     <>
-      <Header />
+      <Header title='Bem vindo,' subtitle='Bruno Garcia' />
       <Box bg={colors.grayMedium}  flex={1} px="20px">
-        <VStack space="20px">
+        <VStack space="20px" flex={1}>
           <Text variant='body' size='bold'>Minhas ordens</Text>
-          <Tabs onPress={(value) => {setActiveTab(value)}} options={tabs}/>
+          <Tabs onPress={(value) => activeTabChange(value)} options={tabs}/>
           <FlatList
             data={data}
-            renderItem={({ item }) => {
-              return <CardAgenda data={item} />
+            showsVerticalScrollIndicator={false}
+            _contentContainerStyle={{ pb: "100px" }}
+            renderItem={({ item }: any) => {
+              return <CardAgenda data={item} onPress={
+                () => deleteOrder(item.id)
+              } />
             }}
+            ItemSeparatorComponent={() => <Box height="10px"/>}
           />
         </VStack>
       </Box>
-      <Fab renderFabAction={<Box/>}/>
+      <Fab onPress={novaOrdem} renderFabAction={<Box/>}/>
     </>
   )
 }

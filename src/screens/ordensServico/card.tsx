@@ -21,7 +21,7 @@ const CardAgenda = (p: Props) => {
           <Badge title={p.data?.aberta ? 'aberta' : 'Fechada'} color={colors.white}/>
           <Text variant="body" size="bold">{p.data?.nomePeca}</Text>
           <Text variant="mono" size="medium">{p.data?.carro}</Text>
-          <Text variant="mono" size="medium" color={colors.gray} >João Hoffmann</Text>
+          <Text variant="mono" size="medium" color={colors.gray}>João Hoffmann</Text>
         </VStack>
         <IconButton iconName='menu' iconSize={25} color={colors.white} />
       </HStack>

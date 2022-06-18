@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Hoshi } from 'react-native-textinput-effects';
-import { Box, HStack } from 'native-base';
+import { HStack } from 'native-base';
 import { colors, fonts } from '@styles/theme';
 import { FilledTextField, TextFieldProps } from 'rn-material-ui-textfield'
 import IconButton from './iconButton';
@@ -21,9 +20,10 @@ type Props = TextFieldProps & {
   onPress?: () => void;
   control: Control;
   name: string;
+  bg?: string;
 }
 
-const Input = ({ label, type, errorMessage, helpText, textRight, iconRight, iconRightOnPress, iconLeft, iconLeftOnPress, onPress, control, name, ...rest }: Props) => {
+const Input = ({ label, type, errorMessage, helpText, textRight, iconRight, iconRightOnPress, iconLeft, iconLeftOnPress, onPress, control, name, bg, ...rest }: Props) => {
   const [showPassword, setShowPassword] = useState(true);
 
   const ShowPassword = () => {
@@ -34,14 +34,14 @@ const Input = ({ label, type, errorMessage, helpText, textRight, iconRight, icon
     <TouchableOpacity onPress={onPress} activeOpacity={type === 'select' ? 0.5 : 1}>
       <HStack
         height="56px"
-        bg={colors.white}
+        bg={bg ? bg : colors.grayLight}
         pr={4}
         pl={4}
         mb={errorMessage ? 5 : 0 || helpText ? 5 : 0}
         space={3}
         borderRadius="8px"
         borderWidth={1}
-        borderColor={errorMessage ? colors.attention : colors.white}
+        borderColor={errorMessage ? colors.attention : colors.grayLight}
         pointerEvents={type === 'select' ? 'none' : 'auto'}
         alignItems="center"
       >
@@ -49,8 +49,9 @@ const Input = ({ label, type, errorMessage, helpText, textRight, iconRight, icon
           <IconButton onPress={iconLeftOnPress} disabled iconName={iconLeft} color={errorMessage ? colors.attention : colors.gray}/>
         )}
         <Controller
+          name={name}
           control={control}
-          render={({ field: { onChange, value }}) => (
+          render={({ field: { onChange, value}}) => (
             <FilledTextField
               label={label}
               title={helpText}
@@ -79,7 +80,7 @@ const Input = ({ label, type, errorMessage, helpText, textRight, iconRight, icon
               }}
               style={{
                 fontFamily: fonts.medium,
-                color: errorMessage ? colors.attention : colors.black,
+                color: errorMessage ? colors.attention : colors.white,
               }}
               containerStyle={{
                 flex: 1,
@@ -87,10 +88,6 @@ const Input = ({ label, type, errorMessage, helpText, textRight, iconRight, icon
               }}
               inputContainerStyle={{
                 backgroundColor: colors.transparent,
-                borderTopEndRadius: 8,
-                borderTopStartRadius: 8,
-                borderBottomEndRadius: 8,
-                borderBottomStartRadius: 8,
               }}
               affixTextStyle={{
                 fontFamily: fonts.semibold,
@@ -102,10 +99,9 @@ const Input = ({ label, type, errorMessage, helpText, textRight, iconRight, icon
               {...rest}
             />
           )}
-          name={name}
         />
         {textRight && (
-          <Text style={{fontSize: 16}} size="semibold" color={errorMessage ? colors.attention : colors.black}>{textRight}</Text>
+          <Text style={{fontSize: 16}} size="semibold" color={errorMessage ? colors.attention : colors.white}>{textRight}</Text>
         )}
         {iconRight && (
           <IconButton onPress={iconRightOnPress} iconName={iconRight} color={errorMessage ? colors.attention : colors.gray}/>
